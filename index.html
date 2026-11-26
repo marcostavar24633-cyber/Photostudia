@@ -55,19 +55,10 @@
 .hero-prints img{grid-area:1/1;width:100%;aspect-ratio:4/5;object-fit:cover;border:5px solid #fff8ef;border-radius:.75rem;box-shadow:0 14px 36px #1117;transform:translate(-45%,25%) rotate(-12deg);animation:print-arrival .65s ease-out both}
 .hero-prints img+img{transform:translate(22%,-12%) rotate(10deg);animation-delay:.14s}
 @keyframes print-arrival{from{opacity:0;translate:2.5rem 0}to{opacity:1;translate:0}}
-.service-fan{display:grid;grid-template-columns:minmax(12rem,.7fr) minmax(0,1fr);gap:clamp(2rem,6vw,6rem);align-items:center}
 .fan-options{display:grid;gap:.65rem}
 .fan-options button,.gallery-controls button{font:inherit;color:var(--ds-text);background:var(--ds-surface);border:1px solid var(--ds-border);padding:.7rem 1rem;border-radius:999px;cursor:pointer}
 .fan-options button{text-align:left}
 .fan-options button[aria-pressed=true]{background:#dbd6fa;color:#28254f}
-.fan-card{min-width:0;padding:1.4rem;background:var(--ds-surface);border:1px solid var(--ds-border);border-radius:1.5rem}
-.fan-card h3{margin:.8rem 0;white-space:normal!important}
-.fan-images{width:75%;margin:auto;display:grid;isolation:isolate}
-.fan-images img{grid-area:1/1;width:100%;aspect-ratio:16/10;object-fit:cover;border:4px solid #fff8ef;border-radius:1rem}
-.fan-images img:first-child{transform:rotate(-10deg) translateX(-14%);z-index:-1}
-.fan-images img:nth-child(2){transform:rotate(10deg) translateX(14%);z-index:-1;object-position:70% 70%}
-.fan-images img:last-child{z-index:0}
-.fan-images img{animation:print-arrival .4s ease-out both}
 #gallery .gallery.gallery--stagger{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.25rem 0 1rem}
 #gallery .gallery>li{flex:0 0 min(74%,42rem);min-width:0;scroll-snap-align:start}
 #gallery .gallery img{width:100%;aspect-ratio:16/10;height:auto;object-fit:cover;border-radius:1rem}
@@ -83,8 +74,8 @@
 .brief-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:1rem;text-align:left}
 .brief-preview{padding:1.2rem;border-radius:1.25rem;border:1px solid var(--ds-border);background:var(--ds-surface);align-self:start;min-width:0}
 .brief-preview pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
-@media(max-width:700px){.hero-prints{display:none}.service-fan,.brief-layout{grid-template-columns:minmax(0,1fr)}}
-@media(prefers-reduced-motion:reduce){.hero-prints img,.fan-images img{animation:none}}
+@media(max-width:700px){.hero-prints{display:none}.brief-layout{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.hero-prints img{animation:none}}
 </style>
 <style>
 .split-hero__panel #hero-h, main .sec__head h2 {
@@ -96,6 +87,30 @@
 }
 .split-hero__panel #hero-h{font-size:clamp(2.6rem,6.1vw,5.75rem);line-height:.92}
 .split-hero__panel #hero-h span{display:block;font-weight:600}
+</style>
+<style>
+.service-showcase{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);gap:clamp(1.25rem,4vw,4rem);align-items:start}
+.service-showcase__copy{min-width:0}
+.service-showcase__description{margin-top:1.25rem}
+.service-showcase__description h3{margin-bottom:.6rem;white-space:normal!important}
+.service-showcase__demo{padding:clamp(.75rem,2vw,1.5rem);min-width:0;border:1px solid var(--ds-border);border-radius:1.5rem;background:var(--ds-surface)}
+.service-showcase__formats{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1rem}
+.service-showcase__formats button{font:inherit;font-size:.9rem;color:var(--ds-text);background:transparent;border:1px solid var(--ds-border);border-radius:999px;padding:.45rem .75rem;cursor:pointer}
+.service-showcase__formats button[aria-pressed=true]{background:#dbd6fa;color:#28254f;border-color:#dbd6fa}
+.service-showcase__stage{display:grid;place-items:center;min-height:19rem;padding:1rem;border-radius:1rem;background:linear-gradient(145deg,#dbd6fa2e,#28254f29)}
+.service-mockup{box-sizing:border-box;width:min(100%,30rem);margin:0;border:1px solid #dbd6fa80;border-radius:.85rem;overflow:hidden;background:#28254f;color:#fff8ef}
+.service-mockup__bar{height:1.4rem;background:radial-gradient(circle,#dbd6fa 2px,transparent 3px) 7px center/12px 12px repeat-x;background-size:12px 12px;width:42px}
+.service-mockup img{display:block;width:100%;aspect-ratio:16/9;max-height:18rem;object-fit:cover}
+.service-mockup figcaption{padding:.5rem .75rem;font-size:.9rem}
+.service-mockup:is([data-shape=square],[data-shape=product],[data-shape=detail],[data-shape=profile]){width:min(100%,14rem)}
+.service-mockup:is([data-shape=square],[data-shape=product],[data-shape=detail],[data-shape=profile]) img{aspect-ratio:1}
+.service-mockup[data-shape=product] figcaption{background:#fff8ef;color:#28254f}
+.service-mockup[data-shape=detail] img{object-view-box:inset(20%);object-position:65% 55%}
+.service-mockup[data-shape=profile] img{border-radius:50%;width:76%;margin:.5rem auto}
+.service-mockup[data-shape=vertical]{width:min(100%,10rem)}
+.service-mockup[data-shape=vertical] img{aspect-ratio:9/16}
+.service-mockup[data-shape=banner] img{aspect-ratio:3}
+@media(max-width:700px){.service-showcase{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body id="top" class="arch-immersive nav-floating section-layout-inset-panel">
@@ -266,26 +281,55 @@ document.getElementById('shoot-brief').addEventListener('submit', function (even
   const services = Array.from(serviceList.querySelectorAll('li'), function (item) {
     return { name: item.querySelector('h3').textContent, text: item.querySelector('p').textContent, image: item.querySelector('img').src };
   });
-  const fan = document.createElement('div');
-  fan.className = 'service-fan';
-  fan.innerHTML = '<div class="fan-options" role="group" aria-label="Виды фотосъёмки"></div><div class="fan-card" aria-live="polite"><div class="fan-images" aria-hidden="true"></div><h3></h3><p></p></div>';
-  const options = fan.querySelector('.fan-options');
-  const stack = fan.querySelector('.fan-images');
+  const formats = [
+    [['Главная сайта', 'Страница бренда', 'wide'], ['Публикация', 'Пост в ленте', 'square'], ['История', 'Вертикальный кадр', 'vertical']],
+    [['Карточка товара', 'Интернет-магазин', 'product'], ['Каталог', 'Разворот каталога', 'wide'], ['Деталь', 'Фрагмент фактуры', 'detail']],
+    [['Сайт компании', 'Страница команды', 'wide'], ['Профиль', 'Фото профиля', 'profile'], ['Публикация', 'Пост в ленте', 'square']],
+    [['Страница запуска', 'Главный кадр анонса', 'wide'], ['Рекламный баннер', 'Горизонтальный формат', 'banner'], ['История', 'Вертикальный анонс', 'vertical']]
+  ];
+  const showcase = document.createElement('div');
+  showcase.className = 'service-showcase';
+  showcase.innerHTML = '<div class="service-showcase__copy"><div class="fan-options" role="group" aria-label="Виды фотосъёмки"></div><div class="service-showcase__description" aria-live="polite"><h3></h3><p></p></div></div><div class="service-showcase__demo"><div class="service-showcase__formats" role="group" aria-label="Форматы публикации"></div><div class="service-showcase__stage"><figure class="service-mockup"><div class="service-mockup__bar" aria-hidden="true"></div><img alt=""><figcaption></figcaption></figure></div></div>';
+  const options = showcase.querySelector('.fan-options');
+  const choices = showcase.querySelector('.service-showcase__formats');
+  const mockup = showcase.querySelector('.service-mockup');
+  const image = mockup.querySelector('img');
+  const caption = mockup.querySelector('figcaption');
+  let activeService = 0;
 
-  function showService(index) {
-    const service = services[index];
-    Array.from(options.children).forEach(function (button, position) {
+  function markSelection(group, index) {
+    Array.from(group.children).forEach(function (button, position) {
       button.setAttribute('aria-pressed', String(index === position));
     });
-    stack.replaceChildren();
-    for (let layer = 0; layer < 3; layer++) {
-      const image = document.createElement('img');
-      image.src = service.image;
-      image.alt = '';
-      stack.append(image);
+  }
+
+  function showFormat(index) {
+    const [, label, shape] = formats[activeService][index];
+    markSelection(choices, index);
+    mockup.dataset.shape = shape;
+    caption.textContent = label;
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches && mockup.animate) {
+      mockup.getAnimations().forEach(function (animation) { animation.cancel(); });
+      mockup.animate([{ opacity: .45, transform: 'translateY(12px) scale(.98)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'ease-out' });
     }
-    fan.querySelector('h3').textContent = service.name;
-    fan.querySelector('p').textContent = service.text;
+  }
+
+  function showService(index) {
+    activeService = index;
+    const service = services[index];
+    markSelection(options, index);
+    showcase.querySelector('h3').textContent = service.name;
+    showcase.querySelector('.service-showcase__description p').textContent = service.text;
+    image.src = service.image;
+    choices.replaceChildren();
+    formats[index].forEach(function (format, position) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = format[0];
+      button.addEventListener('click', function () { showFormat(position); });
+      choices.append(button);
+    });
+    showFormat(0);
   }
 
   services.forEach(function (service, index) {
@@ -295,8 +339,8 @@ document.getElementById('shoot-brief').addEventListener('submit', function (even
     button.addEventListener('click', function () { showService(index); });
     options.append(button);
   });
+  serviceList.replaceWith(showcase);
   showService(0);
-  serviceList.replaceWith(fan);
 
   const prints = document.createElement('div');
   prints.className = 'hero-prints';
