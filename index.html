@@ -59,7 +59,8 @@
 .fan-options button,.gallery-controls button{font:inherit;color:var(--ds-text);background:var(--ds-surface);border:1px solid var(--ds-border);padding:.7rem 1rem;border-radius:999px;cursor:pointer}
 .fan-options button{text-align:left}
 .fan-options button[aria-pressed=true]{background:#dbd6fa;color:#28254f}
-#gallery .gallery.gallery--stagger{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.25rem 0 1rem}
+#gallery .gallery.gallery--stagger{display:flex;gap:1rem;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory;padding:.25rem 0 1rem}
+#gallery .gallery.gallery--stagger::-webkit-scrollbar{display:none}
 #gallery .gallery>li{flex:0 0 min(74%,42rem);min-width:0;scroll-snap-align:start}
 #gallery .gallery img{width:100%;aspect-ratio:16/10;height:auto;object-fit:cover;border-radius:1rem}
 .gallery-controls{display:flex;gap:.5rem;margin-bottom:1rem}
@@ -414,7 +415,8 @@ document.getElementById('shoot-brief').addEventListener('submit', function (even
   [-1, 1].forEach(function (direction) {
     const button = document.createElement('button');
     button.type = 'button';
-    button.textContent = direction < 0 ? 'Предыдущий кадр' : 'Следующий кадр';
+    button.textContent = direction < 0 ? '←' : '→';
+    button.setAttribute('aria-label', direction < 0 ? 'Предыдущий кадр' : 'Следующий кадр');
     button.addEventListener('click', function () {
       const step = gallery.children[1].offsetLeft - gallery.children[0].offsetLeft;
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
