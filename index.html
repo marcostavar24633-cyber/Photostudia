@@ -76,6 +76,8 @@
 .project-grid article img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:.75rem;margin-bottom:1rem}
 .project-grid summary{cursor:pointer;margin-top:.65rem}
 #process .proc li{border-radius:1rem}
+#process .process-frames img{display:block;width:100%;max-width:15rem;aspect-ratio:16/10;object-fit:cover;border-radius:.75rem;margin-top:.65rem}
+#pricing details a{display:inline-block;margin-top:.7rem}
 #faq details[open]{background:#dbd6fa;color:#28254f;border-radius:1rem}
 #faq details[open] :is(summary,p){color:inherit}
 .brief-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:1rem;text-align:left}
@@ -322,6 +324,33 @@ document.getElementById('shoot-brief').addEventListener('submit', function (even
     const summary = document.createElement('summary');
     summary.textContent = 'Задача и план съёмки';
     details.append(summary, card.querySelector('p'));
+    card.append(details);
+  });
+
+  const process = document.querySelector('#process .proc');
+  process.classList.add('process-frames');
+  Array.from(process.children).forEach(function (card, index) {
+    const source = gallery.children[[0, 1, 2, 3][index]].querySelector('img');
+    const image = document.createElement('img');
+    image.src = source.src;
+    image.alt = '';
+    image.loading = 'lazy';
+    card.append(image);
+  });
+
+  document.querySelectorAll('#pricing article').forEach(function (card, index) {
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = 'Что входит';
+    const link = document.createElement('a');
+    link.href = '#contact';
+    link.textContent = 'Заполнить бриф';
+    link.addEventListener('click', function () {
+      const service = document.querySelector('#shoot-brief select');
+      service.value = ['Предметная съёмка', 'Деловой портрет', 'Контент для бренда'][index];
+      service.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    details.append(summary, card.querySelector('p:last-child'), link);
     card.append(details);
   });
 
