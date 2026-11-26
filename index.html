@@ -50,6 +50,40 @@
 }
 @media(prefers-reduced-motion:reduce){.split-hero__shot img{top:0;height:100%;transform:none}}
 </style>
+<style>
+.hero-prints{position:absolute;right:clamp(2rem,8vw,8rem);top:25%;width:clamp(90px,11vw,155px);display:grid;z-index:-1}
+.hero-prints img{grid-area:1/1;width:100%;aspect-ratio:4/5;object-fit:cover;border:5px solid #fff8ef;border-radius:.75rem;box-shadow:0 14px 36px #1117;transform:translate(-45%,25%) rotate(-12deg);animation:print-arrival .65s ease-out both}
+.hero-prints img+img{transform:translate(22%,-12%) rotate(10deg);animation-delay:.14s}
+@keyframes print-arrival{from{opacity:0;translate:2.5rem 0}to{opacity:1;translate:0}}
+.service-fan{display:grid;grid-template-columns:minmax(12rem,.7fr) minmax(0,1fr);gap:clamp(2rem,6vw,6rem);align-items:center}
+.fan-options{display:grid;gap:.65rem}
+.fan-options button,.gallery-controls button{font:inherit;color:var(--ds-text);background:var(--ds-surface);border:1px solid var(--ds-border);padding:.7rem 1rem;border-radius:999px;cursor:pointer}
+.fan-options button{text-align:left}
+.fan-options button[aria-pressed=true]{background:#dbd6fa;color:#28254f}
+.fan-card{min-width:0;padding:1.4rem;background:var(--ds-surface);border:1px solid var(--ds-border);border-radius:1.5rem}
+.fan-card h3{margin:.8rem 0;white-space:normal!important}
+.fan-images{width:75%;margin:auto;display:grid;isolation:isolate}
+.fan-images img{grid-area:1/1;width:100%;aspect-ratio:16/10;object-fit:cover;border:4px solid #fff8ef;border-radius:1rem}
+.fan-images img:first-child{transform:rotate(-10deg) translateX(-14%);z-index:-1}
+.fan-images img:nth-child(2){transform:rotate(10deg) translateX(14%);z-index:-1;object-position:70% 70%}
+.fan-images img:last-child{z-index:0}
+.fan-images img{animation:print-arrival .4s ease-out both}
+#gallery .gallery.gallery--stagger{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.25rem 0 1rem}
+#gallery .gallery>li{flex:0 0 min(74%,42rem);min-width:0;scroll-snap-align:start}
+#gallery .gallery img{width:100%;aspect-ratio:16/10;height:auto;object-fit:cover;border-radius:1rem}
+.gallery-controls{display:flex;gap:.5rem;margin-bottom:1rem}
+.project-grid article{border-radius:1.25rem}
+.project-grid article img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:.75rem;margin-bottom:1rem}
+.project-grid summary{cursor:pointer;margin-top:.65rem}
+#process .proc li{border-radius:1rem}
+#faq details[open]{background:#dbd6fa;color:#28254f;border-radius:1rem}
+#faq details[open] :is(summary,p){color:inherit}
+.brief-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:1rem;text-align:left}
+.brief-preview{padding:1.2rem;border-radius:1.25rem;border:1px solid var(--ds-border);background:var(--ds-surface);align-self:start;min-width:0}
+.brief-preview pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}
+@media(max-width:700px){.hero-prints{display:none}.service-fan,.brief-layout{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.hero-prints img,.fan-images img{animation:none}}
+</style>
 </head>
 <body id="top" class="arch-immersive nav-floating section-layout-inset-panel">
 <a class="skip" href="#main">Перейти к содержимому</a>
@@ -211,6 +245,106 @@ document.getElementById('shoot-brief').addEventListener('submit', function (even
   window.addEventListener('resize', schedule);
   reducedMotion.addEventListener('change', schedule);
   schedule();
+})();
+</script>
+<script>
+(function () {
+  const serviceList = document.querySelector('#items .items');
+  const services = Array.from(serviceList.querySelectorAll('li'), function (item) {
+    return { name: item.querySelector('h3').textContent, text: item.querySelector('p').textContent, image: item.querySelector('img').src };
+  });
+  const fan = document.createElement('div');
+  fan.className = 'service-fan';
+  fan.innerHTML = '<div class="fan-options" role="group" aria-label="Виды фотосъёмки"></div><div class="fan-card" aria-live="polite"><div class="fan-images" aria-hidden="true"></div><h3></h3><p></p></div>';
+  const options = fan.querySelector('.fan-options');
+  const stack = fan.querySelector('.fan-images');
+
+  function showService(index) {
+    const service = services[index];
+    Array.from(options.children).forEach(function (button, position) {
+      button.setAttribute('aria-pressed', String(index === position));
+    });
+    stack.replaceChildren();
+    for (let layer = 0; layer < 3; layer++) {
+      const image = document.createElement('img');
+      image.src = service.image;
+      image.alt = '';
+      stack.append(image);
+    }
+    fan.querySelector('h3').textContent = service.name;
+    fan.querySelector('p').textContent = service.text;
+  }
+
+  services.forEach(function (service, index) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = service.name;
+    button.addEventListener('click', function () { showService(index); });
+    options.append(button);
+  });
+  showService(0);
+  serviceList.replaceWith(fan);
+
+  const prints = document.createElement('div');
+  prints.className = 'hero-prints';
+  prints.setAttribute('aria-hidden', 'true');
+  [services[1], services[2]].forEach(function (service) {
+    const image = document.createElement('img');
+    image.src = service.image;
+    image.alt = '';
+    prints.append(image);
+  });
+  document.querySelector('.split-hero__panel').before(prints);
+
+  const gallery = document.querySelector('#gallery .gallery');
+  const controls = document.createElement('div');
+  controls.className = 'gallery-controls';
+  [-1, 1].forEach(function (direction) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = direction < 0 ? 'Предыдущий кадр' : 'Следующий кадр';
+    button.addEventListener('click', function () {
+      const step = gallery.children[1].offsetLeft - gallery.children[0].offsetLeft;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      gallery.scrollBy({ left: direction * step, behavior: reduce ? 'auto' : 'smooth' });
+    });
+    controls.append(button);
+  });
+  gallery.before(controls);
+
+  document.querySelectorAll('#projects article').forEach(function (card, index) {
+    const image = document.createElement('img');
+    image.src = services[[1, 3, 2][index]].image;
+    image.alt = '';
+    image.loading = 'lazy';
+    card.prepend(image);
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = 'Задача и план съёмки';
+    details.append(summary, card.querySelector('p'));
+    card.append(details);
+  });
+
+  const form = document.getElementById('shoot-brief');
+  const layout = document.createElement('div');
+  layout.className = 'brief-layout';
+  const preview = document.createElement('aside');
+  preview.className = 'brief-preview';
+  preview.innerHTML = '<h3>Предпросмотр брифа</h3><pre></pre>';
+  form.before(layout);
+  layout.append(form, preview);
+  function updatePreview() {
+    const fields = new FormData(form);
+    const deadline = fields.get('deadline');
+    preview.querySelector('pre').textContent = [
+      'Вид съёмки: ' + (fields.get('service') || 'выберите услугу'),
+      'Задача: ' + (fields.get('task').trim() || 'добавьте описание'),
+      'Фотографии нужны к: ' + (deadline ? deadline.split('-').reverse().join('.') : 'дата не указана'),
+      'Примеры и ТЗ: ' + (fields.get('references').trim() || 'не указаны')
+    ].join('\n\n');
+  }
+  form.addEventListener('input', updatePreview);
+  updatePreview();
 })();
 </script>
 </body>
